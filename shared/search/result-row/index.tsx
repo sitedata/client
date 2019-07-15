@@ -76,6 +76,7 @@ const Middle = ({rightService, rightIcon, rightIconOpaque, rightUsername, rightF
         {!!rightUsername && (
           <Text
             type="BodySmallSemibold"
+            lineClamp={1}
             style={platformStyles({
               common: {
                 ...followingStateToStyle(rightFollowingState),
