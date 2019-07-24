@@ -6,6 +6,7 @@ if (process.env['KEYBASE_FEATURES']) {
 }
 
 let features = (featureFlagsOverride && featureFlagsOverride.split(',')) || []
+console.log('TESTING TESTING TESTING', {features})
 
 const featureOn = (key: keyof FeatureFlags) => features.includes(key)
 

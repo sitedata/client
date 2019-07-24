@@ -27,6 +27,7 @@ export type Props = {
 
 const data = {
   [Tabs.chatTab]: {icon: 'iconfont-nav-2-chat', label: 'Chat'},
+  [Tabs.cryptoTab]: {icon: 'iconfont-nav-2-people', label: 'Crypto'},
   [Tabs.devicesTab]: {icon: 'iconfont-nav-2-devices', label: 'Devices'},
   [Tabs.fsTab]: {icon: 'iconfont-nav-2-files', label: 'Files'},
   [Tabs.gitTab]: {icon: 'iconfont-nav-2-git', label: 'Git'},
@@ -134,37 +135,44 @@ class TabBar extends React.PureComponent<Props, State> {
               onHidden={this._hideMenu}
             />
           </Kb.Box2>
-          {tabs.map((t, i) => (
-            <Kb.ClickableBox key={t} onClick={() => p.onTabClick(t)}>
-              <Kb.WithTooltip
-                text={`${data[t].label} (${Platforms.shortcutSymbol}${i + 1})`}
-                toastClassName="tab-tooltip"
-              >
-                <Kb.Box2
-                  direction="horizontal"
-                  fullWidth={true}
-                  className={t === p.selectedTab ? 'tab-selected' : 'tab'}
-                  style={styles.tab}
+          {tabs.map((t, i) => {
+            if (!flags.crypto && t === Tabs.cryptoTab) {
+              return null
+            }
+            return (
+              <Kb.ClickableBox key={t} onClick={() => p.onTabClick(t)}>
+                <Kb.WithTooltip
+                  text={`${data[t].label} (${Platforms.shortcutSymbol}${i + 1})`}
+                  toastClassName="tab-tooltip"
                 >
-                  <Kb.Box2 className="tab-highlight" direction="vertical" fullHeight={true} />
-                  <Kb.Box2 style={styles.iconBox} direction="horizontal">
-                    <Kb.Icon className="tab-icon" type={data[t].icon} sizeType="Big" />
-                    {p.uploading && t === Tabs.fsTab && (
-                      <Kb.Icon
-                        type={'icon-addon-file-uploading'}
-                        sizeType={'Default'}
-                        style={styles.badgeIcon}
-                      />
+                  <Kb.Box2
+                    direction="horizontal"
+                    fullWidth={true}
+                    className={t === p.selectedTab ? 'tab-selected' : 'tab'}
+                    style={styles.tab}
+                  >
+                    <Kb.Box2 className="tab-highlight" direction="vertical" fullHeight={true} />
+                    <Kb.Box2 style={styles.iconBox} direction="horizontal">
+                      <Kb.Icon className="tab-icon" type={data[t].icon} sizeType="Big" />
+                      {p.uploading && t === Tabs.fsTab && (
+                        <Kb.Icon
+                          type={'icon-addon-file-uploading'}
+                          sizeType={'Default'}
+                          style={styles.badgeIcon}
+                        />
+                      )}
+                    </Kb.Box2>
+                    <Kb.Text className="tab-label" type="BodySmallSemibold">
+                      {data[t].label}
+                    </Kb.Text>
+                    {!!p.badgeNumbers[t] && (
+                      <Kb.Badge className="tab-badge" badgeNumber={p.badgeNumbers[t]} />
                     )}
                   </Kb.Box2>
-                  <Kb.Text className="tab-label" type="BodySmallSemibold">
-                    {data[t].label}
-                  </Kb.Text>
-                  {!!p.badgeNumbers[t] && <Kb.Badge className="tab-badge" badgeNumber={p.badgeNumbers[t]} />}
-                </Kb.Box2>
-              </Kb.WithTooltip>
-            </Kb.ClickableBox>
-          ))}
+                </Kb.WithTooltip>
+              </Kb.ClickableBox>
+            )
+          })}
           <RuntimeStats />
         </Kb.Box2>
       )

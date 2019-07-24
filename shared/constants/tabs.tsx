@@ -1,6 +1,7 @@
 import {isMobile} from './platform'
 
 type ChatTab = 'tabs.chatTab'
+type CryptoTab = 'tabs.cryptoTab'
 type DevicesTab = 'tabs.devicesTab'
 type FolderTab = 'tabs.folderTab'
 type LoginTab = 'tabs.loginTab'
@@ -14,6 +15,7 @@ type WalletsTab = 'tabs.walletsTab'
 
 export type Tab =
   | ChatTab
+  | CryptoTab
   | DevicesTab
   | FolderTab
   | LoginTab
@@ -26,6 +28,7 @@ export type Tab =
   | WalletsTab
 
 const chatTab: Tab & AppTab = 'tabs.chatTab'
+const cryptoTab: Tab & AppTab = 'tabs.cryptoTab'
 const devicesTab: Tab & AppTab = 'tabs.devicesTab'
 const folderTab: Tab = 'tabs.folderTab'
 const loginTab: Tab = 'tabs.loginTab'
@@ -37,7 +40,16 @@ const gitTab: Tab & AppTab = 'tabs.gitTab'
 const fsTab: Tab & AppTab = 'tabs.fsTab'
 const walletsTab: Tab & AppTab = 'tabs.walletsTab'
 
-export type AppTab = PeopleTab | ChatTab | FsTab | TeamsTab | WalletsTab | GitTab | DevicesTab | SettingsTab
+export type AppTab =
+  | PeopleTab
+  | ChatTab
+  | FsTab
+  | TeamsTab
+  | WalletsTab
+  | GitTab
+  | DevicesTab
+  | CryptoTab
+  | SettingsTab
 
 // Canonical ordering for desktop tabs, used visually and for hotkeys
 const desktopTabOrder = [
@@ -48,6 +60,7 @@ const desktopTabOrder = [
   walletsTab,
   gitTab,
   devicesTab,
+  cryptoTab,
   settingsTab,
 ].filter(Boolean)
 
@@ -67,6 +80,7 @@ function isValidInitialTabString(tab: string | null) {
 
 export {
   chatTab,
+  cryptoTab,
   desktopTabOrder,
   devicesTab,
   folderTab,
