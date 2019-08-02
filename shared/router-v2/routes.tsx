@@ -1,4 +1,5 @@
 import {newRoutes as chatNewRoutes, newModalRoutes as chatNewModalRoutes} from '../chat/routes'
+import {newRoutes as cryptoNewRoutes, newModalRoutes as cryptoNewModalRoutes} from '../crypto/routes'
 import {newRoutes as deviceNewRoutes, newModalRoutes as deviceNewModalRoutes} from '../devices/routes'
 import {newRoutes as fsNewRoutes, newModalRoutes as fsNewModalRoutes} from '../fs/routes'
 import {newRoutes as gitNewRoutes, newModalRoutes as gitNewModalRoutes} from '../git/routes'
@@ -31,6 +32,7 @@ const _newRoutes: ReadonlyArray<RoutePlusTab> = [
   {route: settingsNewRoutes, tab: Tabs.settingsTab} as RoutePlusTab,
   {route: teamsNewRoutes, tab: Tabs.teamsTab} as RoutePlusTab,
   {route: walletsNewRoutes, tab: Tabs.walletsTab} as RoutePlusTab,
+  {route: cryptoNewRoutes, tab: Tabs.cryptoTab} as RoutePlusTab,
   {route: gitNewRoutes, tab: Tabs.gitTab} as RoutePlusTab,
 ]
 
@@ -53,11 +55,13 @@ export const tabRoots = {
   [Tabs.walletsTab]: 'walletsRoot',
   [Tabs.gitTab]: 'gitRoot',
   [Tabs.devicesTab]: 'devicesRoot',
+  [Tabs.cryptoTab]: 'cryptoRoot',
   [Tabs.settingsTab]: 'settingsRoot',
 }
 
 export const modalRoutes: RouteMap = {
   ...(chatNewModalRoutes as RouteMap),
+  ...(cryptoNewModalRoutes as RouteMap),
   ...(deviceNewModalRoutes as RouteMap),
   ...(fsNewModalRoutes as RouteMap),
   ...(gitNewModalRoutes as RouteMap),

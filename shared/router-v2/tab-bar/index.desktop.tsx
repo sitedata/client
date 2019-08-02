@@ -221,6 +221,7 @@ const keysMap = Tabs.desktopTabOrder.reduce((map, tab, index) => {
   map[`${Platforms.isDarwin ? 'command' : 'ctrl'}+${index + 1}`] = tab
   return map
 }, {})
+
 const hotkeys = Object.keys(keysMap)
 
 const InsideHotKeyTabBar = KeyHandler(TabBar)

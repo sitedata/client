@@ -29,6 +29,7 @@ export const desktopTabs = [
   Tabs.walletsTab,
   Tabs.gitTab,
   Tabs.devicesTab,
+  Tabs.cryptoTab,
   Tabs.settingsTab,
 ]
 
@@ -122,7 +123,7 @@ export const oldActionToNewActions = (action: any, navigation: any, allowAppendD
         }),
       ]
     }
-      default:
-          return undefined
+    default:
+      return undefined
   }
 }
