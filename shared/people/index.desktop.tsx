@@ -17,7 +17,6 @@ const People = (props: Props) => (
     <PeoplePageList {...props} />
   </Kb.ScrollView>
 )
-
 const styles = Styles.styleSheetCreate(() => ({
   container: {...Styles.globalStyles.fullHeight},
   header: {flexGrow: 1},

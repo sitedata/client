@@ -37,7 +37,7 @@ export type _FollowedNotification = {
 export type FollowedNotification = I.RecordOf<_FollowedNotification>
 
 export type _FollowedNotificationItem = {
-  type: 'notification'
+  type: 'notification' | 'contact'
   newFollows: Array<FollowedNotification>
   notificationTime: Date
   badged: boolean
