@@ -21,7 +21,7 @@ type Props = {
 type IconProps = {
   service: ServiceIdWithContact
   label: string
-  showLabel: boolean
+  labelPresence: number // how much to show the label [0, 1]
   onClick: () => void
   count: number | null
   showCount: boolean
@@ -37,7 +37,7 @@ const HoverIcon = Styles.styled<typeof Kb.Icon, ExtraProps>(Kb.Icon)(props => ({
 }))
 
 const ServiceIconDesktop = (props: IconProps) => (
-  <Kb.ClickableBox onClick={props.onClick} style={styles.clickableServiceIcon}>
+  <Kb.ClickableBox onClick={props.onClick}>
     <Kb.Box2 direction="horizontal" centerChildren={true} style={styles.serviceIconContainer}>
       <Kb.WithTooltip text={serviceIdToLabel(props.service)}>
         <HoverIcon
@@ -72,8 +72,8 @@ const ServiceIconDesktop = (props: IconProps) => (
   </Kb.ClickableBox>
 )
 
-const ServiceIconMobile = (props: IconProps) => (
-  <Kb.ClickableBox onClick={props.onClick} style={styles.clickableServiceIcon}>
+const ServiceIconMobile = (props: IconProps) => {
+  return (<Kb.ClickableBox onClick={props.onClick} >
     <Kb.Box2 direction="vertical" centerChildren={true} style={styles.serviceIconContainer}>
       <Kb.Icon
         fontSize={18}
@@ -83,6 +83,9 @@ const ServiceIconMobile = (props: IconProps) => (
           {color: props.isActive ? serviceIdToAccentColor(props.service) : inactiveServiceAccentColor},
         ])}
       />
+      <Kb.Box2 direction="vertical" style={{height: 32 * props.labelPresence, opacity: props.labelPresence}}>
+        <Kb.Text type="BodyTinySemibold" lineClamp={2}>{props.label}</Kb.Text>
+      </Kb.Box2>
       {!!props.showCount && props.count === null && (
         <Kb.Icon
           type="icon-progress-grey-animated"
@@ -95,9 +98,6 @@ const ServiceIconMobile = (props: IconProps) => (
           {props.count && props.count === 11 ? '10+' : props.count}
         </Kb.Text>
       )}
-      {!!props.showLabel && (<Kb.Text type="BodyTinySemibold" lineClamp={2}>
-        {props.label}
-      </Kb.Text>)}
     </Kb.Box2>
     <Kb.Box2
       direction="horizontal"
@@ -107,38 +107,63 @@ const ServiceIconMobile = (props: IconProps) => (
         props.isActive && {backgroundColor: serviceIdToAccentColor(props.service)},
       ])}
     />
-  </Kb.ClickableBox>
-)
+  </Kb.ClickableBox>)
+}
 
 const ServiceIcon = Styles.isMobile ? ServiceIconMobile : ServiceIconDesktop
 
 const undefToNull = (n: number | undefined | null): number | null => (n === undefined ? null : n)
 
+const serviceLabel = (service: ServiceIdWithContact) => {
+  switch (service) {
+    case 'keybase':
+      return 'A Keybase user'
+    case 'contact':
+      return 'A contact'
+    case 'twitter':
+      return 'A Twitter user'
+    case 'facebook':
+      return 'A Facebook user'
+    case 'github':
+      return 'A GitHub user'
+    case 'reddit':
+      return 'A Reddit user'
+    case 'hackernews':
+      return 'A HN user'
+    case 'pgp':
+      return 'A PGP user'
+    default:
+      return 'A user'
+  }
+}
+
 const ServiceTabBar = (props: Props) => (
-  <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.tabBarContainer}>
-    <Kb.ScrollView horizontal={true}>
-    {Constants.services.map(service => (
-      <ServiceIcon
-        key={service}
-        service={service}
-        label={service} // xxx label should not be service
-        showLabel={props.showLabels}
-        onClick={() => props.onChangeService(service)}
-        count={undefToNull(props.serviceResultCount[service])}
-        showCount={props.showServiceResultCount}
-        isActive={props.selectedService === service}
-      />
-    ))}
-    </Kb.ScrollView>
-  </Kb.Box2>
+  <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
+    {({ presence }) => (
+      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, Styles.isMobile ? {height: 48 + 32 * presence} : {}])}>
+        <Kb.ScrollView horizontal={true}>
+        {Constants.services.map(service => (
+          <ServiceIcon
+            key={service}
+            service={service}
+            label={serviceLabel(service)}
+            labelPresence={presence}
+            onClick={() => props.onChangeService(service)}
+            count={undefToNull(props.serviceResultCount[service])}
+            showCount={props.showServiceResultCount}
+            isActive={props.selectedService === service}
+          />
+        ))}
+        </Kb.ScrollView>
+      </Kb.Box2>
+    )}
+  </Kb.Animated>
 )
 
 const styles = Styles.styleSheetCreate({
   activeTabBar: {
     backgroundColor: Styles.globalColors.blue,
     height: 2,
-  },
-  clickableServiceIcon: {
   },
   inactiveTabBar: {
     backgroundColor: Styles.globalColors.black_10,
@@ -156,7 +181,7 @@ const styles = Styles.styleSheetCreate({
   }),
   serviceIconContainer: Styles.platformStyles({
     common: {
-      flex: 1,
+      flex: 1, // xxx
       marginLeft: Styles.globalMargins.xtiny,
       marginRight: Styles.globalMargins.xtiny,
       paddingBottom: Styles.globalMargins.tiny,
@@ -166,7 +191,7 @@ const styles = Styles.styleSheetCreate({
       minWidth: 40,
     },
     isMobile: {
-      minWidth: 74,
+      width: 74,
     },
   }),
   tabBarContainer: Styles.platformStyles({
@@ -177,9 +202,6 @@ const styles = Styles.styleSheetCreate({
       minHeight: 30,
       paddingLeft: Styles.globalMargins.small,
       paddingRight: Styles.globalMargins.small,
-    },
-    isMobile: {
-      height: 58,
     },
   }),
 })
