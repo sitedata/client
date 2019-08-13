@@ -72,6 +72,8 @@ const ServiceIconDesktop = (props: IconProps) => (
   </Kb.ClickableBox>
 )
 
+const labelHeight = 34
+
 const ServiceIconMobile = (props: IconProps) => {
   return (<Kb.ClickableBox onClick={props.onClick} >
     <Kb.Box2 direction="vertical" centerChildren={true} style={styles.serviceIconContainer}>
@@ -83,8 +85,10 @@ const ServiceIconMobile = (props: IconProps) => {
           {color: props.isActive ? serviceIdToAccentColor(props.service) : inactiveServiceAccentColor},
         ])}
       />
-      <Kb.Box2 direction="vertical" style={{height: 32 * props.labelPresence, opacity: props.labelPresence}}>
-        <Kb.Text type="BodyTinySemibold" lineClamp={2}>{props.label}</Kb.Text>
+      <Kb.Box2 direction="vertical" style={{height: labelHeight * props.labelPresence, opacity: props.labelPresence, overflow: 'hidden'}}>
+        <Kb.Box2 direction="vertical" style={{height: labelHeight}}>
+          <Kb.Text type="BodyTiny" center={true} lineClamp={2}>{props.label}</Kb.Text>
+        </Kb.Box2>
       </Kb.Box2>
       {!!props.showCount && props.count === null && (
         <Kb.Icon
@@ -140,7 +144,7 @@ const serviceLabel = (service: ServiceIdWithContact) => {
 const ServiceTabBar = (props: Props) => (
   <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
     {({ presence }) => (
-      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, Styles.isMobile ? {height: 48 + 32 * presence} : {}])}>
+      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, Styles.isMobile ? {height: 48 + labelHeight * presence} : {}])}>
         <Kb.ScrollView horizontal={true}>
         {Constants.services.map(service => (
           <ServiceIcon
@@ -166,8 +170,9 @@ const styles = Styles.styleSheetCreate({
     height: 2,
   },
   inactiveTabBar: {
-    backgroundColor: Styles.globalColors.black_10,
-    height: 1,
+    borderBottomWidth: 1,
+    borderColor: Styles.globalColors.black_10,
+    height: 2,
   },
   pendingIcon: Styles.platformStyles({
     isElectron: {height: 10, width: 10},
