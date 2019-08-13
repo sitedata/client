@@ -37,6 +37,8 @@ type OwnProps = {
   changeShowRolePicker: (showRolePicker: boolean) => void
   showRolePicker: boolean
   showServiceResultCount: boolean
+  showServiceBarLabels: boolean,
+  setShowServiceBarLabels: (show: boolean) => void
 }
 
 type LocalState = {
@@ -44,6 +46,7 @@ type LocalState = {
   selectedService: ServiceIdWithContact
   highlightedIndex: number
   showRolePicker: boolean
+  showServiceBarLabels: boolean
 }
 
 const initialState: LocalState = {
@@ -51,6 +54,7 @@ const initialState: LocalState = {
   searchString: '',
   selectedService: 'keybase',
   showRolePicker: false,
+  showServiceBarLabels: true,
 }
 
 const deriveSearchResults = memoize(
@@ -169,6 +173,7 @@ const mapStateToProps = (state: Container.TypedState, ownProps: OwnProps) => {
       ownProps.searchString
     ),
     showResults: deriveShowResults(ownProps.searchString),
+    showServiceBarLabels: ownProps.showServiceBarLabels,
     showServiceResultCount: !isMobile && deriveShowResults(ownProps.searchString),
     teamSoFar: deriveTeamSoFar(teamBuildingState.teamBuildingTeamSoFar),
     userFromUserId: deriveUserFromUserIdFn(userResults, teamBuildingState.teamBuildingUserRecs),
@@ -274,7 +279,7 @@ const deriveOnSearchForMore = memoizeShallow(
 )
 
 const deriveOnAdd = memoize(
-  (userFromUserId, dispatchOnAdd, changeText, resetHighlightIndex) => (userId: string) => {
+  (userFromUserId, dispatchOnAdd, changeText, resetHighlightIndex, setShowServiceBarLabels) => (userId: string) => {
     const user = userFromUserId(userId)
     if (!user) {
       logger.error(`Couldn't find User to add for ${userId}`)
@@ -284,6 +289,7 @@ const deriveOnAdd = memoize(
     changeText('')
     dispatchOnAdd(user)
     resetHighlightIndex(true)
+    setShowServiceBarLabels(false)
   }
 )
 
@@ -472,8 +478,14 @@ const mergeProps = (
     userFromUserId,
     dispatchProps._onAdd,
     ownProps.onChangeText,
-    ownProps.resetHighlightIndex
+    ownProps.resetHighlightIndex,
+    ownProps.setShowServiceBarLabels
   )
+
+  const onRemove = (userId: string) => {
+    dispatchProps.onRemove(userId)
+    ownProps.setShowServiceBarLabels(false) // xxx this isn't working
+  }
 
   const rolePickerProps: RolePickerProps | null =
     ownProps.namespace === 'teams'
@@ -503,7 +515,7 @@ const mergeProps = (
       rolePickerProps && !ownProps.showRolePicker
         ? () => ownProps.changeShowRolePicker(true)
         : dispatchProps.onFinishTeamBuilding,
-    onRemove: dispatchProps.onRemove,
+    onRemove,
     searchResults: userResultsToShow,
     searchStringIsEmpty: !ownProps.searchString,
     teamSoFar,
@@ -566,6 +578,7 @@ const mergeProps = (
     serviceResultCount,
     showRecs,
     showResults: stateProps.showResults,
+    showServiceBarLabels: stateProps.showServiceBarLabels,
     showServiceResultCount: showServiceResultCount && ownProps.showServiceResultCount,
     teamSoFar,
     title,
@@ -586,7 +599,7 @@ class StateWrapperForTeamBuilding extends React.Component<RealOwnProps, LocalSta
 
   changeShowRolePicker = (showRolePicker: boolean) => this.setState({showRolePicker})
 
-  onChangeService = (selectedService: ServiceIdWithContact) => this.setState({selectedService})
+  onChangeService = (selectedService: ServiceIdWithContact) => this.setState({selectedService, showServiceBarLabels: true})
 
   onChangeText = (newText: string) => {
     if (newText !== this.state.searchString) {
@@ -607,6 +620,9 @@ class StateWrapperForTeamBuilding extends React.Component<RealOwnProps, LocalSta
   resetHighlightIndex = (resetToHidden?: boolean) =>
     this.setState({highlightedIndex: resetToHidden ? -1 : initialState.highlightedIndex})
 
+  setShowServiceBarLabels = (show: boolean) =>
+    this.setState({showServiceBarLabels: show})
+
   render() {
     return (
       <Connected
@@ -623,6 +639,8 @@ class StateWrapperForTeamBuilding extends React.Component<RealOwnProps, LocalSta
         changeShowRolePicker={this.changeShowRolePicker}
         showRolePicker={this.state.showRolePicker}
         showServiceResultCount={this.state.searchString !== ''}
+        showServiceBarLabels={this.state.showServiceBarLabels} // xxx
+        setShowServiceBarLabels={this.setShowServiceBarLabels}
       />
     )
   }

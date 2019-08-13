@@ -15,10 +15,13 @@ type Props = {
   onChangeService: (newService: ServiceIdWithContact) => void
   serviceResultCount: {[K in ServiceIdWithContact]?: number | null}
   showServiceResultCount: boolean
+  showLabels: boolean,
 }
 
 type IconProps = {
   service: ServiceIdWithContact
+  label: string
+  showLabel: boolean
   onClick: () => void
   count: number | null
   showCount: boolean
@@ -92,6 +95,9 @@ const ServiceIconMobile = (props: IconProps) => (
           {props.count && props.count === 11 ? '10+' : props.count}
         </Kb.Text>
       )}
+      {!!props.showLabel && (<Kb.Text type="BodyTinySemibold" lineClamp={2}>
+        {props.label}
+      </Kb.Text>)}
     </Kb.Box2>
     <Kb.Box2
       direction="horizontal"
@@ -110,16 +116,20 @@ const undefToNull = (n: number | undefined | null): number | null => (n === unde
 
 const ServiceTabBar = (props: Props) => (
   <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.tabBarContainer}>
+    <Kb.ScrollView horizontal={true}>
     {Constants.services.map(service => (
       <ServiceIcon
         key={service}
         service={service}
+        label={service} // xxx label should not be service
+        showLabel={props.showLabels}
         onClick={() => props.onChangeService(service)}
         count={undefToNull(props.serviceResultCount[service])}
         showCount={props.showServiceResultCount}
         isActive={props.selectedService === service}
       />
     ))}
+    </Kb.ScrollView>
   </Kb.Box2>
 )
 
@@ -129,7 +139,6 @@ const styles = Styles.styleSheetCreate({
     height: 2,
   },
   clickableServiceIcon: {
-    flex: 1,
   },
   inactiveTabBar: {
     backgroundColor: Styles.globalColors.black_10,
@@ -145,14 +154,21 @@ const styles = Styles.styleSheetCreate({
       marginRight: Styles.globalMargins.xtiny,
     },
   }),
-  serviceIconContainer: {
-    flex: 1,
-    marginLeft: Styles.globalMargins.xtiny,
-    marginRight: Styles.globalMargins.xtiny,
-    minWidth: 40,
-    paddingBottom: Styles.globalMargins.tiny,
-    paddingTop: Styles.globalMargins.tiny,
-  },
+  serviceIconContainer: Styles.platformStyles({
+    common: {
+      flex: 1,
+      marginLeft: Styles.globalMargins.xtiny,
+      marginRight: Styles.globalMargins.xtiny,
+      paddingBottom: Styles.globalMargins.tiny,
+      paddingTop: Styles.globalMargins.tiny,
+    },
+    isElectron: {
+      minWidth: 40,
+    },
+    isMobile: {
+      minWidth: 74,
+    },
+  }),
   tabBarContainer: Styles.platformStyles({
     common: {
       marginTop: Styles.globalMargins.xtiny,

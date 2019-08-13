@@ -81,6 +81,7 @@ export type Props = ContactProps & {
   showRecs: boolean
   showResults: boolean
   showServiceResultCount: boolean
+  showServiceBarLabels: boolean
   teamSoFar: Array<{
     userId: string
     prettyName: string
@@ -508,6 +509,7 @@ class TeamBuilding extends React.PureComponent<Props, {}> {
           onChangeService={props.onChangeService}
           serviceResultCount={props.serviceResultCount}
           showServiceResultCount={props.showServiceResultCount}
+          showLabels={props.showServiceBarLabels}
         />
         {Styles.isMobile && (
           <ContactsBanner
