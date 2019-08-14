@@ -48,7 +48,7 @@
     "editPhone": {
       "phone": "string",
       "delete?": "boolean",
-      "setSearchable?": "boolean",
+      "setSearchable?": "boolean"
     },
     "sentVerificationEmail": {
       "email": "string"
@@ -81,7 +81,7 @@
     },
     "addedEmail": {
       "email": "string",
-      "error?": "Error"
+      "error?": "string"
     },
     "clearAddingEmail": {"_description": "Reset state used for adding an email."},
     "clearAddedEmail": {"_description": "Reset state used for showing we just added an email."},
