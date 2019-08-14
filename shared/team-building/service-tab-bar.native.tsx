@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as Kb from '../common-adapters/index'
 import * as Styles from '../styles'
+import {useTimeout} from '../common-adapters/use-timers'
 import {
   serviceIdToIconFont,
   serviceIdToAccentColor,
@@ -9,6 +10,7 @@ import {
 } from './shared'
 import * as Constants from '../constants/team-building'
 import {Props, IconProps} from './service-tab-bar'
+import {memoize} from '../util/memoize'
 
 const mapRange = (v: number, fromMin: number, fromMax: number, toMin: number, toMax: number) => {
   return (v - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin
@@ -58,12 +60,27 @@ const ServiceIcon = (props: IconProps) => {
 
 const undefToNull = (n: number | undefined | null): number | null => (n === undefined ? null : n)
 
-export const ServiceTabBar = (props: Props) => (
-  <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.barPlaceholder} >
+// xx who knows
+const deriveOnScroll = memoize(
+  (onScroll, postponeClose) => () => {
+    onScroll()
+    postponeClose()
+  }
+)
+
+export const ServiceTabBar = (props: Props) => {
+  const deferClose = useTimeout(props.onSleepy, 1500)
+  React.useEffect(deferClose, [])
+  // const onScroll = deriveOnScroll(props.onScroll, postponeClose)
+  const onScroll = () => {
+    props.onScroll()
+    deferClose()
+  }
+  return (<Kb.Box2 direction="horizontal" fullWidth={true} style={styles.barPlaceholder} >
     <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
       {({ presence }) => (
         <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, {height: 48 + labelHeight * presence, shadowOpacity: presence * 0.1}])}>
-          <Kb.ScrollView horizontal={true} showsHorizontalScrollIndicator={true} onScroll={props.onScroll}>
+          <Kb.ScrollView horizontal={true} showsHorizontalScrollIndicator={true} onScroll={onScroll}>
           {Constants.services.map(service => (
             <ServiceIcon
               key={service}
@@ -80,8 +97,8 @@ export const ServiceTabBar = (props: Props) => (
         </Kb.Box2>
       )}
     </Kb.Animated>
-  </Kb.Box2>
-)
+  </Kb.Box2>)
+}
 
 // xxx clean up platform styles
 const styles = Styles.styleSheetCreate({

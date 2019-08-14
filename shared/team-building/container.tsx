@@ -568,6 +568,7 @@ const mergeProps = (
     onRemove: dispatchProps.onRemove,
     onSearchForMore,
     onTabBarScroll: () => ownProps.setShowServiceBarLabels(true),
+    onTabBarSleepy: () => ownProps.setShowServiceBarLabels(false),
     onUpArrowKeyDown:
       ownProps.showRolePicker && rolePickerArrowKeyFns
         ? rolePickerArrowKeyFns.upArrow
@@ -601,7 +602,8 @@ class StateWrapperForTeamBuilding extends React.Component<RealOwnProps, LocalSta
 
   changeShowRolePicker = (showRolePicker: boolean) => this.setState({showRolePicker})
 
-  onChangeService = (selectedService: ServiceIdWithContact) => this.setState({selectedService, showServiceBarLabels: true})
+  onChangeService = (selectedService: ServiceIdWithContact) => this.setState({selectedService, showServiceBarLabels: true}) // xxx
+  onChangeService = (selectedService: ServiceIdWithContact) => this.setState({selectedService})
 
   onChangeText = (newText: string) => {
     if (newText !== this.state.searchString) {

@@ -74,6 +74,7 @@ export type Props = ContactProps & {
   onUpArrowKeyDown: () => void
   onClear: () => void
   onTabBarScroll: () => void
+  onTabBarSleepy: () => void
   recommendations: Array<SearchRecSection> | null
   searchResults: Array<SearchResult> | null
   searchString: string
@@ -509,6 +510,7 @@ class TeamBuilding extends React.PureComponent<Props, {}> {
           selectedService={props.selectedService}
           onChangeService={props.onChangeService}
           onScroll={props.onTabBarScroll}
+          onSleepy={props.onTabBarSleepy}
           serviceResultCount={props.serviceResultCount}
           showServiceResultCount={props.showServiceResultCount}
           showLabels={props.showServiceBarLabels}
