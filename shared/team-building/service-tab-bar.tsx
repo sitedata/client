@@ -36,6 +36,10 @@ const HoverIcon = Styles.styled<typeof Kb.Icon, ExtraProps>(Kb.Icon)(props => ({
   color: props.isActive ? serviceIdToAccentColor(props.service) : inactiveServiceAccentColor,
 }))
 
+const mapRange = (v: number, fromMin: number, fromMax: number, toMin: number, toMax: number) => {
+  return (v - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin
+}
+
 const ServiceIconDesktop = (props: IconProps) => (
   <Kb.ClickableBox onClick={props.onClick}>
     <Kb.Box2 direction="horizontal" centerChildren={true} style={styles.serviceIconContainer}>
@@ -76,7 +80,7 @@ const labelHeight = 34
 
 const ServiceIconMobile = (props: IconProps) => {
   return (<Kb.ClickableBox onClick={props.onClick} >
-    <Kb.Box2 direction="vertical" centerChildren={true} style={styles.serviceIconContainer}>
+    <Kb.Box2 direction="vertical" centerChildren={true} style={Styles.collapseStyles([styles.serviceIconContainer, { width: mapRange(props.labelPresence, 0, 1, 72, 92) }])}>
       <Kb.Icon
         fontSize={18}
         type={serviceIdToIconFont(props.service)}
@@ -86,7 +90,7 @@ const ServiceIconMobile = (props: IconProps) => {
         ])}
       />
       <Kb.Box2 direction="vertical" style={{height: labelHeight * props.labelPresence, opacity: props.labelPresence, overflow: 'hidden'}}>
-        <Kb.Box2 direction="vertical" style={{height: labelHeight}}>
+        <Kb.Box2 direction="vertical" style={{height: labelHeight, width: 74}}>
           <Kb.Text type="BodyTiny" center={true} lineClamp={2}>{props.label}</Kb.Text>
         </Kb.Box2>
       </Kb.Box2>
@@ -114,8 +118,6 @@ const ServiceIconMobile = (props: IconProps) => {
   </Kb.ClickableBox>)
 }
 
-const ServiceIcon = Styles.isMobile ? ServiceIconMobile : ServiceIconDesktop
-
 const undefToNull = (n: number | undefined | null): number | null => (n === undefined ? null : n)
 
 const serviceLabel = (service: ServiceIdWithContact) => {
@@ -141,13 +143,13 @@ const serviceLabel = (service: ServiceIdWithContact) => {
   }
 }
 
-const ServiceTabBar = (props: Props) => (
+const ServiceTabBarMobile = (props: Props) => (
   <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
     {({ presence }) => (
-      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, Styles.isMobile ? {height: 48 + labelHeight * presence} : {}])}>
+      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, {height: 48 + labelHeight * presence}])}>
         <Kb.ScrollView horizontal={true}>
         {Constants.services.map(service => (
-          <ServiceIcon
+          <ServiceIconMobile
             key={service}
             service={service}
             label={serviceLabel(service)}
@@ -163,6 +165,25 @@ const ServiceTabBar = (props: Props) => (
     )}
   </Kb.Animated>
 )
+
+const ServiceTabBarDesktop = (props: Props) => (
+      <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.tabBarContainer}>
+        {Constants.services.map(service => (
+          <ServiceIconDesktop
+            key={service}
+            service={service}
+            label={serviceLabel(service)}
+            labelPresence={props.showLabels ? 1 : 0}
+            onClick={() => props.onChangeService(service)}
+            count={undefToNull(props.serviceResultCount[service])}
+            showCount={props.showServiceResultCount}
+            isActive={props.selectedService === service}
+          />
+        ))}
+      </Kb.Box2>
+)
+
+const ServiceTabBar = Styles.isMobile ? ServiceTabBarMobile : ServiceTabBarDesktop
 
 const styles = Styles.styleSheetCreate({
   activeTabBar: {
@@ -186,7 +207,7 @@ const styles = Styles.styleSheetCreate({
   }),
   serviceIconContainer: Styles.platformStyles({
     common: {
-      flex: 1, // xxx
+      flex: 1,
       marginLeft: Styles.globalMargins.xtiny,
       marginRight: Styles.globalMargins.xtiny,
       paddingBottom: Styles.globalMargins.tiny,
@@ -194,9 +215,6 @@ const styles = Styles.styleSheetCreate({
     },
     isElectron: {
       minWidth: 40,
-    },
-    isMobile: {
-      width: 74,
     },
   }),
   tabBarContainer: Styles.platformStyles({
