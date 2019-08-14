@@ -58,6 +58,7 @@ const ServiceIcon = (props: IconProps) => (
 
 const undefToNull = (n: number | undefined | null): number | null => (n === undefined ? null : n)
 
+// xxx desktop has regressed severely. May be able to reset it ot master now that mobile is separate.
 export const ServiceTabBar = (props: Props) => (
       <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.tabBarContainer}>
         {Constants.services.map(service => (

@@ -524,6 +524,7 @@ const mergeProps = (
   const title = rolePickerProps ? 'Add people' : 'New chat'
   const headerHocProps: HeaderHocProps = Container.isMobile
     ? {
+        borderless: true,
         leftAction: 'cancel',
         onLeftAction: dispatchProps._onCancelTeamBuilding,
         rightActions: [
@@ -566,6 +567,7 @@ const mergeProps = (
     onMakeItATeam: () => console.log('todo'),
     onRemove: dispatchProps.onRemove,
     onSearchForMore,
+    onTabBarScroll: () => ownProps.setShowServiceBarLabels(true),
     onUpArrowKeyDown:
       ownProps.showRolePicker && rolePickerArrowKeyFns
         ? rolePickerArrowKeyFns.upArrow

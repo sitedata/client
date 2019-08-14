@@ -4,7 +4,7 @@ import * as Styles from '../styles'
 import * as Container from '../util/container'
 import TeamBox from './team-box'
 import Input from './input'
-import { ServiceTabBar } from './service-tab-bar'
+import {ServiceTabBar} from './service-tab-bar'
 import UserResult, {userResultHeight} from './user-result'
 import Flags from '../util/feature-flags'
 import {serviceIdToAccentColor, serviceIdToIconFont, serviceIdToLabel} from './shared'
@@ -73,6 +73,7 @@ export type Props = ContactProps & {
   onSearchForMore: () => void
   onUpArrowKeyDown: () => void
   onClear: () => void
+  onTabBarScroll: () => void
   recommendations: Array<SearchRecSection> | null
   searchResults: Array<SearchResult> | null
   searchString: string
@@ -507,6 +508,7 @@ class TeamBuilding extends React.PureComponent<Props, {}> {
         <ServiceTabBar
           selectedService={props.selectedService}
           onChangeService={props.onChangeService}
+          onScroll={props.onTabBarScroll}
           serviceResultCount={props.serviceResultCount}
           showServiceResultCount={props.showServiceResultCount}
           showLabels={props.showServiceBarLabels}

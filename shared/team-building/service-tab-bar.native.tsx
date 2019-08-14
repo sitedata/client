@@ -59,26 +59,28 @@ const ServiceIcon = (props: IconProps) => {
 const undefToNull = (n: number | undefined | null): number | null => (n === undefined ? null : n)
 
 export const ServiceTabBar = (props: Props) => (
-  <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
-    {({ presence }) => (
-      <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, {height: 48 + labelHeight * presence}])}>
-        <Kb.ScrollView horizontal={true}>
-        {Constants.services.map(service => (
-          <ServiceIcon
-            key={service}
-            service={service}
-            label={serviceLabel(service)}
-            labelPresence={presence}
-            onClick={() => props.onChangeService(service)}
-            count={undefToNull(props.serviceResultCount[service])}
-            showCount={props.showServiceResultCount}
-            isActive={props.selectedService === service}
-          />
-        ))}
-        </Kb.ScrollView>
-      </Kb.Box2>
-    )}
-  </Kb.Animated>
+  <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.barPlaceholder} >
+    <Kb.Animated to={{presence: props.showLabels ? 1 : 0}} config={{clamp: true, tension: 400}}>
+      {({ presence }) => (
+        <Kb.Box2 direction="horizontal" fullWidth={true} style={Styles.collapseStyles([styles.tabBarContainer, {height: 48 + labelHeight * presence, shadowOpacity: presence * 0.1}])}>
+          <Kb.ScrollView horizontal={true} showsHorizontalScrollIndicator={true} onScroll={props.onScroll}>
+          {Constants.services.map(service => (
+            <ServiceIcon
+              key={service}
+              service={service}
+              label={serviceLabel(service)}
+              labelPresence={presence}
+              onClick={() => props.onChangeService(service)}
+              count={undefToNull(props.serviceResultCount[service])}
+              showCount={props.showServiceResultCount}
+              isActive={props.selectedService === service}
+            />
+          ))}
+          </Kb.ScrollView>
+        </Kb.Box2>
+      )}
+    </Kb.Animated>
+  </Kb.Box2>
 )
 
 // xxx clean up platform styles
@@ -86,6 +88,10 @@ const styles = Styles.styleSheetCreate({
   activeTabBar: {
     backgroundColor: Styles.globalColors.blue,
     height: 2,
+  },
+  barPlaceholder: {
+    height: 48,
+    position: 'relative',
   },
   inactiveTabBar: {
     borderBottomWidth: 1,
@@ -114,16 +120,13 @@ const styles = Styles.styleSheetCreate({
       minWidth: 40,
     },
   }),
-  tabBarContainer: Styles.platformStyles({
-    common: {
-      marginTop: Styles.globalMargins.xtiny,
-    },
-    isElectron: {
-      minHeight: 30,
-      paddingLeft: Styles.globalMargins.small,
-      paddingRight: Styles.globalMargins.small,
-    },
-  }),
+  tabBarContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    shadowOffset: { height: 3, width: 0 },
+    shadowRadius: 2,
+    top: 0,
+  },
 })
 
 export default ServiceTabBar

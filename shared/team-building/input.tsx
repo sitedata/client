@@ -72,6 +72,9 @@ const Input = (props: Props) => {
 
 const styles = Styles.styleSheetCreate({
   container: Styles.platformStyles({
+    common: {
+      zIndex: -1, // behind ServiceTabBar
+    },
     isElectron: {
       ...Styles.padding(Styles.globalMargins.tiny, Styles.globalMargins.xsmall),
     },
