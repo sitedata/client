@@ -56,4 +56,28 @@ const serviceIdToLabel = (service: ServiceIdWithContact): string => services[ser
 
 const inactiveServiceAccentColor = Styles.globalColors.black_50
 
-export {serviceIdToIconFont, serviceIdToAccentColor, inactiveServiceAccentColor, serviceIdToLabel}
+// xxx merge with
+const serviceLabel = (service: ServiceIdWithContact) => {
+  switch (service) {
+    case 'keybase':
+      return 'A Keybase user'
+    case 'contact':
+      return 'A contact'
+    case 'twitter':
+      return 'A Twitter user'
+    case 'facebook':
+      return 'A Facebook user'
+    case 'github':
+      return 'A GitHub user'
+    case 'reddit':
+      return 'A Reddit user'
+    case 'hackernews':
+      return 'A HN user'
+    case 'pgp':
+      return 'A PGP user'
+    default:
+      return 'A user'
+  }
+}
+
+export {serviceIdToIconFont, serviceIdToAccentColor, inactiveServiceAccentColor, serviceIdToLabel, serviceLabel}
