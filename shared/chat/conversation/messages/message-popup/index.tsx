@@ -48,6 +48,7 @@ class MessageAction extends React.PureComponent<Props> {
       case 'systemChangeRetention':
       case 'systemGitPush':
       case 'systemInviteAccepted':
+      case 'systemSBSResolved':
       case 'systemSimpleToComplex':
       case 'systemText':
       case 'systemUsersAddedToConversation':

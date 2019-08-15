@@ -95,6 +95,7 @@ export const serviceMessageTypeToMessageTypes = (t: RPCChatTypes.MessageType): A
         'systemChangeRetention',
         'systemGitPush',
         'systemInviteAccepted',
+        'systemSBSResolved',
         'systemSimpleToComplex',
         'systemText',
         'systemUsersAddedToConversation',
@@ -130,6 +131,7 @@ export const allMessageTypes: I.Set<Types.MessageType> = I.Set([
   'systemInviteAccepted',
   'systemJoined',
   'systemLeft',
+  'systemSBSResolved',
   'systemSimpleToComplex',
   'systemText',
   'systemUsersAddedToConversation',
@@ -321,6 +323,14 @@ const makeMessageSystemInviteAccepted = I.Record<MessageTypes._MessageSystemInvi
   reactions: I.Map(),
   team: '',
   type: 'systemInviteAccepted',
+})
+
+const makeMessageSystemSBSResolved = I.Record<MessageTypes._MessageSystemSBSResolved>({
+  ...makeMessageCommonNoDeleteNoEdit,
+  assertion: '',
+  prover: '',
+  reactions: I.Map(),
+  type: 'systemSBSResolved',
 })
 
 const makeMessageSystemSimpleToComplex = I.Record<MessageTypes._MessageSystemSimpleToComplex>({
@@ -571,6 +581,14 @@ const uiMessageToSystemMessage = (
         ...minimum,
         reactions,
         team,
+      })
+    }
+    case RPCChatTypes.MessageSystemType.sbsresolve: {
+      const {prover = '???', assertion = '???'} = body.sbsresolve || {}
+      return makeMessageSystemSBSResolved({
+        assertion,
+        prover,
+        reactions,
       })
     }
     case RPCChatTypes.MessageSystemType.createteam: {
@@ -1240,6 +1258,7 @@ export const shouldShowPopup = (state: TypedState, message: Types.Message) => {
     case 'systemChangeRetention':
     case 'systemGitPush':
     case 'systemInviteAccepted':
+    case 'systemSBSResolved':
     case 'systemSimpleToComplex':
     case 'systemText':
     case 'systemUsersAddedToConversation':
