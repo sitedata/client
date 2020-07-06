@@ -118,7 +118,7 @@
   "private": true,
   "dependencies": {
     "@react-native-community/netinfo": "1.2.3",
-    "@react-navigation/core": "3.4.0",
+    "@react-navigation/core": "3.7.6",
     "@react-navigation/native": "3.4.1",
     "base64-js": "1.3.0",
     "buffer": "5.2.1",
