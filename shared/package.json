@@ -142,7 +142,7 @@
     "lag-radar": "git://github.com/mobz/lag-radar",
     "lodash-es": "4.17.15",
     "lottie-react-native": "2.6.1",
-    "lottie-react-web": "2.1.4",
+    "lottie-react-web": "2.2.1",
     "memoize-one": "5.0.0",
     "menubar": "5.2.3",
     "moment": "2.23.0",
@@ -184,7 +184,7 @@
     "tlds": "1.203.1",
     "typedarray-to-buffer": "3.1.5",
     "unidecode": "^0.1.8",
-    "url-parse": "1.4.4",
+    "url-parse": "1.5.0",
     "uuid": "3.3.2",
     "whatwg-url": "7.0.0"
   },
