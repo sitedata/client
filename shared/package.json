@@ -52,7 +52,9 @@
     "tsc-slow": "node --max-old-space-size=4096 ./node_modules/.bin/tsc --project ./tsconfig.slow.json ",
     "build-storybook": "build-storybook",
     "modules": "yarn install --pure-lockfile --ignore-optional",
-    "log-to-trace": "yarn _node desktop/yarn-helper/log-to-trace"
+    "log-to-trace": "yarn _node desktop/yarn-helper/log-to-trace",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "jest": {
     "coverageDirectory": "./coverage",
@@ -186,7 +188,8 @@
     "unidecode": "^0.1.8",
     "url-parse": "1.4.4",
     "uuid": "3.3.2",
-    "whatwg-url": "7.0.0"
+    "whatwg-url": "7.0.0",
+    "snyk": "^1.653.0"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
@@ -325,5 +328,6 @@
     "babel-core": "7.0.0-bridge.0",
     "**/node-gyp/tar": "4.4.8",
     "react-native-screens": "git://github.com/keybase/react-native-screens#danny/fix-textinput-blur"
-  }
+  },
+  "snyk": true
 }
